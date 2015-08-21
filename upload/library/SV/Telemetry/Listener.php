@@ -18,7 +18,7 @@ class SV_Telemetry_Listener
     public static function post_dispatch(XenForo_Controller $controller, $controllerResponse, $controllerName, $action)
     {
         SV_Telemetry_Model::$lastControllerKey = $controllerName. '.'. $action;
-        SV_Telemetry_Model::postTiming(SV_Telemetry_Model::$lastControllerKey, $controller->telemetry_starttime, microtime(true));
+        SV_Telemetry_Model::postTiming('action.'.SV_Telemetry_Model::$lastControllerKey, $controller->telemetry_starttime, microtime(true));
     }
 
     public static function pre_view(XenForo_FrontController $fc, XenForo_ControllerResponse_Abstract &$controllerResponse, XenForo_ViewRenderer_Abstract &$viewRenderer, array &$containerParams)
