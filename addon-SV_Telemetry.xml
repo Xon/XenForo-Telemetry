@@ -15,13 +15,31 @@
   <cron/>
   <email_templates/>
   <email_template_modifications/>
-  <optiongroups/>
+  <optiongroups>
+    <group group_id="SV_Telemetry" display_order="32" debug_only="0"/>
+    <option option_id="sv_telemetry_fluent_connection" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value>unix:///var/run/td-agent/td-agent.sock</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="SV_Telemetry" display_order="100"/>
+    </option>
+  </optiongroups>
   <permissions>
     <permission_groups/>
     <permissions/>
     <interface_groups/>
   </permissions>
-  <phrases/>
+  <phrases>
+    <phrase title="option_group_SV_Telemetry" version_id="10000" version_string="1.0.0"><![CDATA[Telemetry]]></phrase>
+    <phrase title="option_group_SV_Telemetry_description" version_id="10000" version_string="1.0.0"><![CDATA[Provides telemetry configuration options for monitoring XenForo internals.]]></phrase>
+    <phrase title="option_sv_telemetry_fluent_connection" version_id="10000" version_string="1.0.0"><![CDATA[Fluentd Connection String]]></phrase>
+    <phrase title="option_sv_telemetry_fluent_connection_explain" version_id="10000" version_string="1.0.0"><![CDATA[Telemetry data is relayed via <a href="http://www.fluentd.org/">Fluentd</a> to Elastic Search for indexing. This permits to connection type to be defined.<br/>
+Supported transports examples:
+<ol>
+<li>tcp://localhost:port</i>
+<li>unix:///var/run/td-agent/td-agent.sock</i>
+</ol>]]></phrase>
+  </phrases>
   <route_prefixes/>
   <style_properties/>
   <templates/>
