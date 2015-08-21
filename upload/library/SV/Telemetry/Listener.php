@@ -9,21 +9,17 @@ class SV_Telemetry_Listener
         $extend[] = self::AddonNameSpace.$class;
     }
 
-    public static $lastControllerKey = null;
-    public static $lastControllerIds = null;
-
     public static function pre_dispatch(XenForo_Controller $controller, $action, $controllerName)
     {
+        SV_Telemetry_Model::$lastControllerKey = $controllerName. '.'. $action;
         $controller->telemetry_starttime = microtime(true);
     }
 
     public static function post_dispatch(XenForo_Controller $controller, $controllerResponse, $controllerName, $action)
     {
-        self::$lastControllerKey = $controllerName. '::'. $action;
-        self::$lastControllerIds = array();
-        SV_Telemetry_Globals::addTiming('controller', self::$lastControllerKey, $controller->telemetry_starttime, microtime(true));
+        SV_Telemetry_Model::$lastControllerKey = $controllerName. '.'. $action;
+        SV_Telemetry_Model::postTiming(SV_Telemetry_Model::$lastControllerKey, $controller->telemetry_starttime, microtime(true));
     }
-
 
     public static function pre_view(XenForo_FrontController $fc, XenForo_ControllerResponse_Abstract &$controllerResponse, XenForo_ViewRenderer_Abstract &$viewRenderer, array &$containerParams)
     {
@@ -32,6 +28,6 @@ class SV_Telemetry_Listener
 
     public static function post_view(XenForo_FrontController $fc, &$output)
     {
-        SV_Telemetry_Globals::addTiming('view', self::$lastControllerKey, self::$lastControllerIds, $fc->telemetry_starttime, microtime(true));
+        SV_Telemetry_Model::postTiming('view.'SV_Telemetry_Model::$lastControllerKey, $fc->telemetry_starttime, microtime(true));
     }
 }
