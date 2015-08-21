@@ -13,9 +13,8 @@ class SV_Telemetry_Model
             return;
         }
         require_once __DIR__.'/../Fluent/Autoloader.php';
-        use Fluent\Logger\FluentLogger;
         Fluent\Autoloader::register();
-        $this->logger = new FluentLogger($host, $port);
+        $this->logger = new \Fluent\Logger\FluentLogger($host, $port);
         Fluent\Autoloader::unregister();
     }
 

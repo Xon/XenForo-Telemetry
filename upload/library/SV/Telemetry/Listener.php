@@ -28,6 +28,6 @@ class SV_Telemetry_Listener
 
     public static function post_view(XenForo_FrontController $fc, &$output)
     {
-        SV_Telemetry_Model::postTiming('view.'SV_Telemetry_Model::$lastControllerKey, $fc->telemetry_starttime, microtime(true));
+        SV_Telemetry_Model::postTiming('view.'.SV_Telemetry_Model::$lastControllerKey, $fc->telemetry_starttime, microtime(true));
     }
 }
