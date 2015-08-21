@@ -1,0 +1,27 @@
+## built-in UNIX socket input
+<source>
+  type unix
+  path /var/run/td-agent/td-agent.sock
+</source>
+
+## live debugging agent
+<source>
+  type debug_agent
+  bind 127.0.0.1
+  port 24230
+</source>
+
+## XenForo Telemetry
+<match xf.*.*>
+  type elasticsearch
+  include_tag_key true
+  tag_key _key
+  #flush_interval 1s # for testing
+</match>
+
+<match xf.*.*.*>
+  type elasticsearch
+  include_tag_key true
+  tag_key key
+  #flush_interval 1s # for testing
+</match>
