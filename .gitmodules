@@ -1,0 +1,4 @@
+[submodule "upload/library/SV/Telemetry/DataDog"]
+	path = upload/library/SV/Telemetry/DataDog
+	url = https://github.com/DataDog/php-datadogstatsd.git
+	branch = master
