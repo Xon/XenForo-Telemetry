@@ -34,7 +34,7 @@ class SV_Telemetry_Dbintercept extends XFCP_SV_Telemetry_Dbintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, array('tagname' => 'commit'));
+            BatchedDatadogstatsd::timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, array('transtype' => 'commit'));
             $this->transactionTime = 0;
         }
     }
@@ -47,7 +47,7 @@ class SV_Telemetry_Dbintercept extends XFCP_SV_Telemetry_Dbintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, array('tagname' => 'rollback'));
+            BatchedDatadogstatsd::timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, array('transtype' => 'rollback'));
             $this->transactionTime = 0;
         }
     }
