@@ -4,12 +4,11 @@ include_once('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
 
 class SV_Telemetry_Listener
 {
-    const AddonNameSpace = 'SV_Telemetry_';
     static $lastControllerKey;
 
     public static function load_class($class, array &$extend)
     {
-        $extend[] = self::AddonNameSpace.$class;
+        $extend[] = 'SV_Telemetry_'.$class;
     }
 
     public static function pre_dispatch(XenForo_Controller $controller, $action, $controllerName)
