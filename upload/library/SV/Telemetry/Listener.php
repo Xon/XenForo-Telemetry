@@ -1,6 +1,6 @@
 <?php
 
-include('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
+include_once('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
 
 class SV_Telemetry_Listener
 {
