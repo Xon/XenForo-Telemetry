@@ -2,11 +2,25 @@
 
 class SV_Telemetry_Wrapper
 {
-    public static function injectForIO(array &$config)
+    public static function injectForIO(array &$config, $wrapperOnly = true)
     {
-		$config['internalDataPath'] = SV_Telemetry_IOintercept::prefix_full . (isset($config['internalDataPath']) ? $config['internalDataPath'] : 'internal_data');
-        $config['externalDataPath'] = SV_Telemetry_IOintercept::prefix_full . (isset($config['externalDataPath']) ? $config['externalDataPath'] : 'data');
-        stream_wrapper_register(SV_Telemetry_IOintercept::prefix, "SV_Telemetry_IOintercept");
+        if (!$wrapperOnly)
+        {
+            $config['internalDataPath'] = SV_Telemetry_IOintercept::prefix_full . (isset($config['internalDataPath']) ? $config['internalDataPath'] : 'internal_data');
+            $config['externalDataPath'] = SV_Telemetry_IOintercept::prefix_full . (isset($config['externalDataPath']) ? $config['externalDataPath'] : 'data');
+            stream_wrapper_register(SV_Telemetry_IOintercept::prefix, "SV_Telemetry_IOintercept");
+        }
+
+        if (class_exists('SV_Csync2StreamWrapper_CsyncConfig', true))
+        {
+            $csync2Config = SV_Csync2StreamWrapper_CsyncConfig::getInstance();
+            if ($csync2Config->isInstalled())
+            {
+                stream_wrapper_unregister('csync2');
+            }
+            $csync2Config->setInstalled(true);
+            stream_wrapper_register('csync2', "SV_Telemetry_CsyncIOintercept");
+        }
     }
 
     public static function injectForDatabase(array &$config)
