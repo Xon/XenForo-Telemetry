@@ -5,7 +5,7 @@ class SV_Telemetry_Wrapper
     public static function injectForIO(array &$config)
     {
 		$config['internalDataPath'] = SV_Telemetry_IOintercept::prefix_full . (isset($config['internalDataPath']) ? $config['internalDataPath'] : 'internal_data');
-        $config['externalDataPath'] = SV_Telemetry_IOintercept::prefix_full . (isset($config['externalDataPath']) ? $config['internalDataPath'] : 'data');
+        $config['externalDataPath'] = SV_Telemetry_IOintercept::prefix_full . (isset($config['externalDataPath']) ? $config['externalDataPath'] : 'data');
         stream_wrapper_register(SV_Telemetry_IOintercept::prefix, "SV_Telemetry_IOintercept");
     }
 
