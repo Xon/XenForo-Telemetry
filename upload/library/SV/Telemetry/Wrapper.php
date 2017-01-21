@@ -13,13 +13,7 @@ class SV_Telemetry_Wrapper
 
         if (class_exists('SV_Csync2StreamWrapper_CsyncConfig', true))
         {
-            $csync2Config = SV_Csync2StreamWrapper_CsyncConfig::getInstance();
-            if ($csync2Config->isInstalled())
-            {
-                stream_wrapper_unregister('csync2');
-            }
-            $csync2Config->setInstalled(true);
-            stream_wrapper_register('csync2', "SV_Telemetry_CsyncIOintercept");
+            SV_Telemetry_CsyncIOintercept::setup();
         }
     }
 
@@ -68,7 +62,7 @@ class SV_Telemetry_Wrapper
         {
             return;
         }
-        
+
         // due to poor extensibiliy, Cacheintercept actually resolves to Zend_Cache_Backend_Cacheintercept.
         // this class just includes SV_Telemetry_Cacheintercept
         $cache['backend'] = 'Cacheintercept';

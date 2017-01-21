@@ -1,8 +1,27 @@
 <?php
 
-class SV_Telemetry_CsyncIOintercept extends SV_Csync2StreamWrapper_csyncwrapper
+class SV_Telemetry_CsyncIOintercept extends SV_Csync2StreamWrapper_CsyncConfig
 {
-    public static function pushSingeChange($path)
+    public static function setup()
+    {
+        $csync2Config = SV_Csync2StreamWrapper_CsyncConfig::getInstance();
+        // hijack the instance variable so we can override the csync injection logic
+        self::$_instance = new self();
+        self::$_instance->setInstalled($csync2Config->isInstalled());
+    }
+
+    public function RegisterStream()
+    {
+        if ($this->isInstalled())
+        {
+            return;
+        }
+        $this->setInstalled(true);
+
+        stream_wrapper_register(SV_Csync2StreamWrapper_csyncwrapper::prefix, "SV_Csync2StreamWrapper_csyncwrapper");
+    }
+
+    public function pushSingeChange($path)
     {
         $queryTime = microtime(true);
         try
@@ -15,7 +34,7 @@ class SV_Telemetry_CsyncIOintercept extends SV_Csync2StreamWrapper_csyncwrapper
         }
     }
 
-    public static function pushBulkChanges($flags)
+    public function pushBulkChanges($flags)
     {
         $queryTime = microtime(true);
         try
