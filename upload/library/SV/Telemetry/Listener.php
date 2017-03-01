@@ -33,10 +33,14 @@ class SV_Telemetry_Listener
 
     public static function post_view(XenForo_FrontController $fc, &$output)
     {
+        global $supressTelemetryBufferFlush;
         if (!empty($fc->telemetry_starttime))
         {
             BatchedDatadogstatsd::timing('xenforo.view', microtime(true) - $fc->telemetry_starttime, 1, array('tagname' => self::$lastControllerKey));
         }
-        BatchedDatadogstatsd::flush_buffer();
+        if (!empty($supressTelemetryBufferFlush))
+        {
+            BatchedDatadogstatsd::flush_buffer();
+        }
     }
 }
