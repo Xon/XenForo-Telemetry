@@ -11,7 +11,12 @@ class SV_Telemetry_XenForo_Model_Alert extends XFCP_SV_Telemetry_XenForo_Model_A
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.alertUser', microtime(true) - $starttime, 1);
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.alertUser', microtime(true) - $starttime, 1);
         }
     }
+}
+
+if (false)
+{
+    class XFCP_SV_Telemetry_XenForo_Model_Alert extends XenForo_Model_Alert {}
 }

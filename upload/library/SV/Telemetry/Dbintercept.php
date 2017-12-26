@@ -1,12 +1,10 @@
 <?php
 
-include_once('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
-
 class SV_Telemetry_Dbintercept extends XFCP_SV_Telemetry_Dbintercept
 {
     protected $transactionTime = 0;
 
-    public function query($sql, $bind = array())
+    public function query($sql, $bind = [])
     {
         //$type
         $queryTime = microtime(true);
@@ -16,13 +14,14 @@ class SV_Telemetry_Dbintercept extends XFCP_SV_Telemetry_Dbintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.db.query', microtime(true) - $queryTime, 1);//, array('tagname' => $type));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.db.query', microtime(true) - $queryTime, 1);//, array('tagname' => $type));
         }
     }
 
     public function beginTransaction()
     {
         $this->transactionTime = microtime(true);
+
         return parent::beginTransaction();
     }
 
@@ -34,7 +33,7 @@ class SV_Telemetry_Dbintercept extends XFCP_SV_Telemetry_Dbintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, array('transtype' => 'commit'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, ['transtype' => 'commit']);
             $this->transactionTime = 0;
         }
     }
@@ -47,8 +46,13 @@ class SV_Telemetry_Dbintercept extends XFCP_SV_Telemetry_Dbintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, array('transtype' => 'rollback'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.db.transaction', microtime(true) - $this->transactionTime, 1, ['transtype' => 'rollback']);
             $this->transactionTime = 0;
         }
     }
+}
+
+if (false)
+{
+    class XFCP_SV_Telemetry_Dbintercept extends Zend_Db_Adapter_Mysqli {}
 }

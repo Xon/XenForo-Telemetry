@@ -1,14 +1,12 @@
 <?php
 
-include_once('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
-
 class SV_Telemetry_Listener
 {
     static $lastControllerKey;
 
     public static function load_class($class, array &$extend)
     {
-        $extend[] = 'SV_Telemetry_'.$class;
+        $extend[] = 'SV_Telemetry_' . $class;
     }
 
     public static function pre_dispatch(XenForo_Controller $controller, $action, $controllerName)
@@ -22,7 +20,7 @@ class SV_Telemetry_Listener
         self::$lastControllerKey = $controllerName;//. '.'. $action;
         if (!empty($controller->telemetry_starttime))
         {
-            BatchedDatadogstatsd::timing('xenforo.action', microtime(true) - $controller->telemetry_starttime, 1, array('tagname' => self::$lastControllerKey));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.action', microtime(true) - $controller->telemetry_starttime, 1, ['tagname' => self::$lastControllerKey]);
         }
     }
 
@@ -36,11 +34,11 @@ class SV_Telemetry_Listener
         global $supressTelemetryBufferFlush;
         if (!empty($fc->telemetry_starttime))
         {
-            BatchedDatadogstatsd::timing('xenforo.view', microtime(true) - $fc->telemetry_starttime, 1, array('tagname' => self::$lastControllerKey));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.view', microtime(true) - $fc->telemetry_starttime, 1, ['tagname' => self::$lastControllerKey]);
         }
         if (!empty($supressTelemetryBufferFlush))
         {
-            BatchedDatadogstatsd::flush_buffer();
+            SV_Telemetry_Wrapper::stats()->flush_buffer();
         }
     }
 }

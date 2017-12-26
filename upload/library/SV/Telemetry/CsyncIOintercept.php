@@ -30,7 +30,7 @@ class SV_Telemetry_CsyncIOintercept extends SV_Csync2StreamWrapper_CsyncConfig
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'csync2'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, ['io' => 'csync2']);
         }
     }
 
@@ -43,7 +43,8 @@ class SV_Telemetry_CsyncIOintercept extends SV_Csync2StreamWrapper_CsyncConfig
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'csync2'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, ['io' => 'csync2']);
         }
     }
 }
+

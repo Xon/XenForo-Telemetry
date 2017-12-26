@@ -1,7 +1,5 @@
 <?php
 
-include_once('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
-
 class SV_Telemetry_Cacheintercept extends XFCP_SV_Telemetry_Cacheintercept
 {
     public function load($id, $doNotTestCacheValidity = false)
@@ -13,7 +11,7 @@ class SV_Telemetry_Cacheintercept extends XFCP_SV_Telemetry_Cacheintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'load'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'load'));
         }
     }
 
@@ -26,10 +24,10 @@ class SV_Telemetry_Cacheintercept extends XFCP_SV_Telemetry_Cacheintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'test'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'test'));
         }
     }
-    
+
     public function save($data, $id, $tags = array(), $specificLifetime = false)
     {
         $queryTime = microtime(true);
@@ -39,10 +37,10 @@ class SV_Telemetry_Cacheintercept extends XFCP_SV_Telemetry_Cacheintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'save'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'save'));
         }
     }
-    
+
     public function remove($id)
     {
         $queryTime = microtime(true);
@@ -52,7 +50,12 @@ class SV_Telemetry_Cacheintercept extends XFCP_SV_Telemetry_Cacheintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'remove'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.cache', microtime(true) - $queryTime, 1, array('operation' => 'remove'));
         }
     }
+}
+
+if (false)
+{
+    class XFCP_SV_Telemetry_Cacheintercept extends Zend_Cache_Backend_BlackHole {}
 }

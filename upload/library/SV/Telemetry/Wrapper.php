@@ -1,7 +1,24 @@
 <?php
 
+include_once('SV/Telemetry/DataDog/src/DataDog.php');
+include_once('SV/Telemetry/DataDog/src/BatchedDogStatsd.php');
+
 class SV_Telemetry_Wrapper
 {
+    /**
+     * @return \DataDog\BatchedDogStatsd
+     */
+    public static function stats()
+    {
+        static $stats = null;
+        if ($stats === null)
+        {
+            $stats = new \DataDog\BatchedDogStatsd();
+        }
+
+        return $stats;
+    }
+
     public static function injectForIO(array &$config, $wrapperOnly = true)
     {
         if (!$wrapperOnly)
@@ -55,7 +72,7 @@ class SV_Telemetry_Wrapper
         // glue the telemetry adaptor to the previously configured backend
         if (!class_exists('XFCP_SV_Telemetry_Cacheintercept', false))
         {
-            eval('class XFCP_SV_Telemetry_Cacheintercept extends '.$backendClass.' { }');
+            eval('class XFCP_SV_Telemetry_Cacheintercept extends ' . $backendClass . ' { }');
         }
         // only support intercepting multiple cache class usages if they have the same root
         else if (get_parent_class('XFCP_SV_Telemetry_Cacheintercept') != $backendClass)

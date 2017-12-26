@@ -1,7 +1,5 @@
 <?php
 
-include_once('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
-
 class SV_Telemetry_IOintercept
 {
     const prefix = 'xfiocount';
@@ -46,7 +44,7 @@ class SV_Telemetry_IOintercept
         return True;
     }
 
-    public function dir_opendir($path, $options)
+    public function dir_opendir($path, /** @noinspection PhpUnusedParameterInspection */ $options)
     {
         $path = self::ParsePath($path);
         if (!$path)
@@ -73,7 +71,8 @@ class SV_Telemetry_IOintercept
         {
             return False;
         }
-        return rewinddir($this->dirhandle);
+        rewinddir($this->dirhandle);
+        return True;
     }
 
     public function mkdir($path, $mode, $options)
@@ -91,11 +90,11 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'mkdir'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'mkdir'));
         }
     }
 
-    public function rmdir($path, $options)
+    public function rmdir($path, /** @noinspection PhpUnusedParameterInspection */ $options)
     {
         $path = self::ParsePath($path);
         if (!$path)
@@ -109,7 +108,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'rmdir'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'rmdir'));
         }
     }
 
@@ -128,7 +127,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'close'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'close'));
         }
     }
 
@@ -154,7 +153,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'flush'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'flush'));
         }
     }
 
@@ -197,7 +196,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'metadata'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'metadata'));
         }
         return $ret;
     }
@@ -226,7 +225,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'open'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'open'));
         }
     }
 
@@ -243,7 +242,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'read'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'read'));
         }
     }
 
@@ -256,7 +255,8 @@ class SV_Telemetry_IOintercept
         return fseek($this->streamhandle, $offset, $whence) == 0;
     }
 
-    public function stream_cast($cast_as)
+    public function stream_cast(/** @noinspection PhpUnusedParameterInspection */
+        $cast_as)
     {
         return $this->streamhandle;
     }
@@ -292,7 +292,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'truncate'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'truncate'));
         }
     }
 
@@ -309,7 +309,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'write'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'write'));
         }
     }
 
@@ -327,7 +327,7 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'unlink'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'unlink'));
         }
     }
 
@@ -352,8 +352,10 @@ class SV_Telemetry_IOintercept
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'stat'));
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.io', microtime(true) - $queryTime, 1, array('io' => 'stat'));
         }
+        // doesn't actually get here
+        return 0;
     }
 }
 

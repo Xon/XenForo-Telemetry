@@ -2,7 +2,7 @@
 
 class SV_Telemetry_XenForo_Model_ThreadWatch extends XFCP_SV_Telemetry_XenForo_Model_ThreadWatch
 {
-    public function sendNotificationToWatchUsersOnReply(array $reply, array $thread = null, array $noAlerts = array())
+    public function sendNotificationToWatchUsersOnReply(array $reply, array $thread = null, array $noAlerts = [])
     {
         $starttime = microtime(true);
         try
@@ -11,7 +11,12 @@ class SV_Telemetry_XenForo_Model_ThreadWatch extends XFCP_SV_Telemetry_XenForo_M
         }
         finally
         {
-            BatchedDatadogstatsd::timing('xenforo.replyNotify', microtime(true) - $starttime, 1);
+            SV_Telemetry_Wrapper::stats()->timing('xenforo.replyNotify', microtime(true) - $starttime, 1);
         }
     }
+}
+
+if (false)
+{
+    class XFCP_SV_Telemetry_XenForo_Model_ThreadWatch extends XenForo_Model_ThreadWatch {}
 }
