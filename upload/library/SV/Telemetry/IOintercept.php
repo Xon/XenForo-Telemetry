@@ -4,9 +4,9 @@ include_once('SV/Telemetry/DataDog/libraries/datadogstatsd.php');
 
 class SV_Telemetry_IOintercept
 {
-    public const prefix = 'xfiocount';
-    public const prefix_full = 'xfiocount://';
-    public const prefix_full_count = 12;
+    const prefix = 'xfiocount';
+    const prefix_full = 'xfiocount://';
+    const prefix_full_count = 12;
 
     protected static function ParsePath($path)
     {
